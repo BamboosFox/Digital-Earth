@@ -1,100 +1,20 @@
-﻿<!DOCTYPE html>
+ 
+ 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Use correct character set. -->
-  <meta charset="utf-8">
-  <!-- Tell IE to use the latest, best version. -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge，chrome=1">
-  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
-  <meta name = "viewport" content = "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-  <title>Hello World!</title>
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-  <style>
-      @import url(../Build/Cesium/Widgets/widgets.css);
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>表格操作 - layui</title>
+
+<link rel="stylesheet" href="../src/css/layui.css">
+
+<style>
+body{padding: 20px; /*overflow-y: scroll;*/}
+</style>
 </head>
-<link rel = "stylesheet" href = "../Apps/layui.css">
 <body>
-<div class = "layui-layout layui-layout-admin">
-  <div class = "layui-header">
-    <div class = "layui-logo">数字地球</div>
-    <!-- 头部区域（可配合layui已有的水平导航） -->
-      <ul class = "layui-nav layui-layout-left">
-        <li class = "layui-nav-item"><a href = "">控制台</a></li>
-        <li class = "layui-nav-item"><a href = "">管理</a></li>
-        <li class = "layui-nav-item"><a href = "">用户</a></li>
-        <li class = "layui-nav-item">
-          <a href = "javascript:;">其它系统</a>
-          <dl class = "layui-nav-child">
-            <dd><a href = "">邮件管理</a></dd>
-            <dd><a href = "">消息管理</a></dd>
-            <dd><a href = "">授权管理</a></dd>
-          </dl>
-        </li>
-      </ul>
-      <ul class = "layui-nav layui-layout-right">
-        <li class = "layui-nav-item">
-          <a href = "javascript:;">
-            <img src = "../Apps/pikaqiu.jpg" class="layui-nav-img">
-              超级无敌萌萌哒的皮卡丘
-          </a>
-          <dl class = "layui-nav-child">
-            <dd><a href = "">基本资料</a></dd>
-            <dd><a href = "">安全设置</a></dd>
-          </dl>
-        </li>
-        <li class = "layui-nav-item"><a href = "">退出</a></li>
-      </ul>
-    </div>
 
-
-    <div class = "layui-side layui-bg-black">
-      <div class = "layui-side-scroll">
-      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-        <ul class = "layui-nav layui-nav-tree"  lay-filter="test">
-          <li class = "layui-nav-item layui-nav-itemed">
-            <a class = "" href = "javascript:;">数字地球图层</a>
-            <dl class = "layui-nav-child">
-              <dd><a href = "javascript:Earth()">起始界面</a></dd>
-              <dd><a href = "javascript:Road()">路网图</a></dd>
-              <dd><a href = "javascript:3DTiles()">3D贴图</a></dd>
-              <dd><a href = "javascript:Lights()">灯火图</a></dd>
-              <dd><a href = "javascript:Satellites()">卫星轨道</a></dd>
-              <dd><a href = "javascript:FirePoints()">亚马逊森林火点图</a></dd>
-            </dl>
-          </li>
-          <li class = "layui-nav-item">
-            <a href = "javascript:DownLoadData()">数据下载</a>
-            </dl>
-          </li>
-          <li class = "layui-nav-item"><a href = "">后续开发使用</a></li>
-          <li class = "layui-nav-item"><a href = "">后续开发使用</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-<div id = "ShowData" style = "position : fixed; right : 0; z-index : 9999; display : none;">
-  <table id = "test" lay-filter = "test"></table>
-</div>
-
-<div id = "main">
-  <div id="cesiumContainer"></div>
-</div> 
-  
-<script>
-  Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1N2QyNTI4ZC05YjNkLTQ3NDYtODIzYS04NzczN2UxNDIwZmIiLCJpZCI6MTY4NjksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzEyNzc2NDV9.odo4R1cWoyigQHlK0xlTzw5nJBsqVn5_5p1Lv0EC5U8';
-  var viewer = new Cesium.Viewer('cesiumContainer',
-    {timeline:false,
-      animation:false
-    });
-  viewer._cesiumWidget._creditContainer.style.display = 'none';
-  
-  function DownLoadData(){
-    document.getElementById("ShowData").style.display = "";
-  }  
-</script>
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
@@ -104,7 +24,7 @@
   </div>
 </script>
 
-<!-- <table id="test" lay-filter="test"></table> -->
+<table id="test" lay-filter="test"></table>
 
 <script type="text/html" id="barDemo">
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -119,6 +39,14 @@
   <input type="checkbox" name="yyy" lay-skin="switch" lay-text="女|男">
 </script>
 
+<!-- <script type="text/html" id="cityTpl">
+  <select lay-ignore>
+    <option value="浙江杭州">浙江杭州</option>
+    <option value="江西南昌">江西南昌</option>
+    <option value="湖北武汉">湖北武汉</option>
+  </select>
+</script> -->
+
 <script type="text/html" id="checkboxTpl">
   <input type="checkbox" name="" title="锁定" checked>
 </script>
@@ -126,6 +54,11 @@
 <script type="text/html" id="LAY_table_tpl_email">
   <span {{# if(!d.activate){ }}style="color:#999"{{# } }}>{{ d.email }}</span>
 </script>
+
+<table id="test2" lay-filter="test2"></table>
+
+
+<table id="demo"></table>
 
 <script src="../src/layui.js" src="//layui.hcwl520.com.cn/layui-v2.4.5/layui.js" charset="utf-8"></script>
 <script>
@@ -137,9 +70,9 @@ layui.use('table', function(){
   window.ins1 = table.render({
     elem: '#test'
     ,height: 400
-    ,width: 600
+    //,width: 600
     ,title: '用户数据表'
-    ,url: 'TableData.json'
+    ,url: 'json/table/demo1.json'
     //,size: 'lg'
     ,page: {
       
@@ -228,6 +161,10 @@ layui.use('table', function(){
     console.log(obj);
     //layer.closeAll('tips');
   });
+  
+  
+  
+  
 
   //监听表格行点击
   table.on('tr', function(obj){
@@ -317,8 +254,5 @@ layui.use('table', function(){
   });
 });
 </script>
-
-
-
 </body>
 </html>
