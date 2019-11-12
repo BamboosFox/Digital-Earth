@@ -56,12 +56,12 @@
           <li class = "layui-nav-item layui-nav-itemed">
             <a class = "" href = "javascript:;">数字地球图层</a>
             <dl class = "layui-nav-child">
-              <dd><a href = "../Apps/StartWorld.html">起始界面</a></dd>
-              <dd><a href = "../Apps/2DTiles.html">路网图</a></dd>
-              <dd><a href = "../Apps/3DTiles.html">3D贴图</a></dd>
-              <dd><a href = "../Apps/HotPoints.html">灯火图</a></dd>
-              <dd><a href = "../Apps/Satellites.html">卫星轨道</a></dd>
-              <dd><a href = "../Apps/FirePoints.html">亚马逊森林火点图</a></dd>
+              <dd><a href = "javascript:Earth()">起始界面</a></dd>
+              <dd><a href = "javascript:Road()">路网图</a></dd>
+              <dd><a href = "javascript:3DTiles()">3D贴图</a></dd>
+              <dd><a href = "javascript:Lights()">灯火图</a></dd>
+              <dd><a href = "javascript:Satellites()">卫星轨道</a></dd>
+              <dd><a href = "javascript:FirePoints()">亚马逊森林火点图</a></dd>
             </dl>
           </li>
           <li class = "layui-nav-item">
@@ -83,14 +83,36 @@
   <div id="cesiumContainer"></div>
 </div> 
   
-  <script>
+<script>
+  Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1N2QyNTI4ZC05YjNkLTQ3NDYtODIzYS04NzczN2UxNDIwZmIiLCJpZCI6MTY4NjksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzEyNzc2NDV9.odo4R1cWoyigQHlK0xlTzw5nJBsqVn5_5p1Lv0EC5U8';
+  var viewer = new Cesium.Viewer('cesiumContainer',
+    {timeline:false,
+      animation:false
+    });
+  viewer._cesiumWidget._creditContainer.style.display = 'none';
+  
+  function Earth(){
+    alert("This is Earth!");
+  }
+  
+  function Road(){
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1N2QyNTI4ZC05YjNkLTQ3NDYtODIzYS04NzczN2UxNDIwZmIiLCJpZCI6MTY4NjksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzEyNzc2NDV9.odo4R1cWoyigQHlK0xlTzw5nJBsqVn5_5p1Lv0EC5U8';
-    var viewer = new Cesium.Viewer('cesiumContainer',
-      {timeline:false,
-       animation:false,
-      });
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+    timeline : false,
+    animation : false,
+    imageryProvider : Cesium.createWorldImagery({
+        style : Cesium.IonWorldImageryStyle.AERIAL_WITH_LABELS
+        }),
+    baseLayerPicker : false
+    });
     viewer._cesiumWidget._creditContainer.style.display = 'none';
-    
-  </script>
+  }
+
+  function Lights(){
+    var layers = viewer.scene.imageryLayers;
+    var blackMarble = layers.addImageryProvider(new Cesium.IonImageryProvider({ assetId: 3812 }));
+    blackMarble.alpha = 1;
+  }
+</script>
 </body>
 </html>

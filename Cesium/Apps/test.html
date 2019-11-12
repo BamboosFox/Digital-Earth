@@ -9,13 +9,19 @@
   <meta name = "viewport" content = "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <title>Hello World!</title>
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Cesium.js"></script>
+  <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>  
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
       @import url(../Build/Cesium/Widgets/widgets.css);
   </style>
 </head>
 <link rel = "stylesheet" href = "../Apps/layui.css">
 <body>
+<!-- 绘制整个导航界面 -->
 <div class = "layui-layout layui-layout-admin">
   <div class = "layui-header">
     <div class = "layui-logo">数字地球</div>
@@ -47,8 +53,6 @@
         <li class = "layui-nav-item"><a href = "">退出</a></li>
       </ul>
     </div>
-
-
     <div class = "layui-side layui-bg-black">
       <div class = "layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
@@ -75,14 +79,35 @@
     </div>
   </div>
 </div>
+<!-- 在左侧绘制城市选择界面 -->
+<div id = "ShowCityChoose" style = "background: #FFF; width : 600px; position : fixed; left : 200px; z-index : 9999;display: none;"> 
+  <label for="addr-show02">您选择的是：
+    <input type="text" id="addr-show02">
+  </label>
+  <div id="addr-choice">
+    <ul id="title-wrap">
+      <li value="0">省份</li>
+      <li value="1">城市</li>
+      <li value="2">县区</li>
+    </ul>
+    <div id="show-panel">
+      <ul id="addr-wrap"></ul>
+    </div>
+  </div>
+  <button type="button" class="btn met2">确定</button>    
+</div>
+<script src="city.js"></script>
+<script src="method01.js"></script>
+<script src="method02.js"></script>
+<!-- 在右侧绘制显示数据 -->
 <div id = "ShowData" style = "position : fixed; right : 0; z-index : 9999; display : none;">
   <table id = "test" lay-filter = "test"></table>
 </div>
-
+<!-- 绘制数字地球 -->
 <div id = "main">
   <div id="cesiumContainer"></div>
 </div> 
-  
+<!-- 数字地球界面脚本区  -->
 <script>
   Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1N2QyNTI4ZC05YjNkLTQ3NDYtODIzYS04NzczN2UxNDIwZmIiLCJpZCI6MTY4NjksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzEyNzc2NDV9.odo4R1cWoyigQHlK0xlTzw5nJBsqVn5_5p1Lv0EC5U8';
   var viewer = new Cesium.Viewer('cesiumContainer',
@@ -90,11 +115,18 @@
       animation:false
     });
   viewer._cesiumWidget._creditContainer.style.display = 'none';
-  
+
   function DownLoadData(){
-    document.getElementById("ShowData").style.display = "";
+    if(document.getElementById("ShowCityChoose").style.display == "none")
+      document.getElementById("ShowCityChoose").style.display = "";
+    else
+    document.getElementById("ShowCityChoose").style.display = "none";  
+
+    document.getElementById("ShowData").style.display = "none";  
   }  
 </script>
+
+<!-- 数据下载界面脚本区 -->
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
     <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
@@ -103,8 +135,6 @@
     <button class="layui-btn layui-btn-sm" lay-event="reload">重载</button>
   </div>
 </script>
-
-<!-- <table id="test" lay-filter="test"></table> -->
 
 <script type="text/html" id="barDemo">
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -132,7 +162,6 @@
 layui.use('table', function(){
   var table = layui.table;
   //return;
-  
   //渲染
   window.ins1 = table.render({
     elem: '#test'
@@ -142,9 +171,8 @@ layui.use('table', function(){
     ,url: 'TableData.json'
     //,size: 'lg'
     ,page: {
-      
     }
-    
+
     ,autoSort: false
     //,loading: false
     ,totalRow: true
@@ -185,8 +213,7 @@ layui.use('table', function(){
       };
     }
     */
-  });
-  
+  });  
   //工具栏事件
   table.on('toolbar(test)', function(obj){
     var checkStatus = table.checkStatus(obj.config.id);
