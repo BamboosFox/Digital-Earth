@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge，chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name = "viewport" content = "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.62/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+  </style>
+</head>
+<link rel = "stylesheet" href = "../Apps/layui.css">
+<body>
+<div class = "layui-layout layui-layout-admin">
+  <div class = "layui-header">
+    <div class = "layui-logo">数字地球</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+      <ul class = "layui-nav layui-layout-left">
+        <li class = "layui-nav-item"><a href = "">控制台</a></li>
+        <li class = "layui-nav-item"><a href = "">管理</a></li>
+        <li class = "layui-nav-item"><a href = "">用户</a></li>
+        <li class = "layui-nav-item">
+          <a href = "javascript:;">其它系统</a>
+          <dl class = "layui-nav-child">
+            <dd><a href = "">邮件管理</a></dd>
+            <dd><a href = "">消息管理</a></dd>
+            <dd><a href = "">授权管理</a></dd>
+          </dl>
+        </li>
+      </ul>
+      <ul class = "layui-nav layui-layout-right">
+        <li class = "layui-nav-item">
+          <a href = "javascript:;">
+            <img src = "../Apps/pikaqiu.jpg" class="layui-nav-img">
+              超级无敌萌萌哒的皮卡丘
+          </a>
+          <dl class = "layui-nav-child">
+            <dd><a href = "">基本资料</a></dd>
+            <dd><a href = "">安全设置</a></dd>
+          </dl>
+        </li>
+        <li class = "layui-nav-item"><a href = "">退出</a></li>
+      </ul>
+    </div>
+
+
+    <div class = "layui-side layui-bg-black">
+      <div class = "layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class = "layui-nav layui-nav-tree"  lay-filter="test">
+          <li class = "layui-nav-item layui-nav-itemed">
+            <a class = "" href = "javascript:;">数字地球图层</a>
+            <dl class = "layui-nav-child">
+              <dd><a href = "../Apps/StartWorld.html">起始界面</a></dd>
+              <dd><a href = "../Apps/2DTiles.html">2D贴图</a></dd>
+              <dd><a href = "../Apps/3DTiles.html">3D贴图</a></dd>
+              <dd><a href = "../Apps/HotPoints.html">热点新闻图</a></dd>
+              <dd><a href = "../Apps/Satellites.html">卫星轨道</a></dd>
+              <dd><a href = "../Apps/FirePoints.html">亚马逊森林火点图</a></dd>
+            </dl>
+          </li>
+          <li class = "layui-nav-item">
+            <a href = "javascript:;">数据下载</a>
+            <dl class = "layui-nav-child">
+              <dd><a href = "javascript:;">选择数据</a></dd>
+              <dd><a href = "javascript:;">开始下载</a></dd>
+              <dd><a href = "">备用</a></dd>
+            </dl>
+          </li>
+          <li class = "layui-nav-item"><a href = "">后续开发使用</a></li>
+          <li class = "layui-nav-item"><a href = "">后续开发使用</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div id = "main">
+  <div id="cesiumContainer"></div>
+</div> 
+ 
+<script>
+// A demo of interactive 3D Tiles styling
+// Styling language Documentation: https://github.com/AnalyticalGraphicsInc/3d-tiles/tree/master/specification/Styling
+// Building data courtesy of NYC OpenData portal: http://www1.nyc.gov/site/doitt/initiatives/3d-building.page
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1N2QyNTI4ZC05YjNkLTQ3NDYtODIzYS04NzczN2UxNDIwZmIiLCJpZCI6MTY4NjksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzEyNzc2NDV9.odo4R1cWoyigQHlK0xlTzw5nJBsqVn5_5p1Lv0EC5U8';
+var viewer = new Cesium.Viewer('cesiumContainer', {
+    timeline: false,
+    terrainProvider: Cesium.createWorldTerrain()
+});
+viewer._cesiumWidget._creditContainer.style.display = 'none';
+viewer.scene.globe.depthTestAgainstTerrain = true;
+
+// Set the initial camera view to look at Manhattan
+var initialPosition = Cesium.Cartesian3.fromDegrees(-74.01881302800248, 40.69114333714821, 753);
+var initialOrientation = new Cesium.HeadingPitchRoll.fromDegrees(21.27879878293835, -21.34390550872461, 0.0716951918898415);
+viewer.scene.camera.setView({
+    destination: initialPosition,
+    orientation: initialOrientation,
+    endTransform: Cesium.Matrix4.IDENTITY
+});
+
+// Load the NYC buildings tileset.
+var tileset = new Cesium.Cesium3DTileset({ url: Cesium.IonResource.fromAssetId(5741) });
+viewer.scene.primitives.add(tileset);
+
+// Color buildings based on their height.
+function colorByHeight() {
+    tileset.style = new Cesium.Cesium3DTileStyle({
+        color: {
+            conditions: [
+                ['${height} >= 300', 'rgba(45, 0, 75, 0.5)'],
+                ['${height} >= 200', 'rgb(102, 71, 151)'],
+                ['${height} >= 100', 'rgb(170, 162, 204)'],
+                ['${height} >= 50', 'rgb(224, 226, 238)'],
+                ['${height} >= 25', 'rgb(252, 230, 200)'],
+                ['${height} >= 10', 'rgb(248, 176, 87)'],
+                ['${height} >= 5', 'rgb(198, 106, 11)'],
+                ['true', 'rgb(127, 59, 8)']
+            ]
+        }
+    });
+}
+
+// Color buildings by their latitude coordinate.
+function colorByLatitude() {
+    tileset.style = new Cesium.Cesium3DTileStyle({
+        defines: {
+            latitudeRadians: 'radians(${latitude})'
+        },
+        color: {
+            conditions: [
+                ['${latitudeRadians} >= 0.7125', "color('purple')"],
+                ['${latitudeRadians} >= 0.712', "color('red')"],
+                ['${latitudeRadians} >= 0.7115', "color('orange')"],
+                ['${latitudeRadians} >= 0.711', "color('yellow')"],
+                ['${latitudeRadians} >= 0.7105', "color('lime')"],
+                ['${latitudeRadians} >= 0.710', "color('cyan')"],
+                ['true', "color('blue')"]
+            ]
+        }
+    });
+}
+
+// Color buildings by distance from a landmark.
+function colorByDistance() {
+    tileset.style = new Cesium.Cesium3DTileStyle({
+        defines : {
+            distance : 'distance(vec2(radians(${longitude}), radians(${latitude})), vec2(-1.291777521, 0.7105706624))'
+        },
+        color : {
+            conditions : [
+                ['${distance} > 0.0012',"color('gray')"],
+                ['${distance} > 0.0008', "mix(color('yellow'), color('red'), (${distance} - 0.008) / 0.0004)"],
+                ['${distance} > 0.0004', "mix(color('green'), color('yellow'), (${distance} - 0.0004) / 0.0004)"],
+                ['${distance} < 0.00001', "color('white')"],
+                ['true', "mix(color('blue'), color('green'), ${distance} / 0.0004)"]
+            ]
+        }
+    });
+}
+
+// Color buildings with a '3' in their name.
+function colorByNameRegex() {
+    tileset.style = new Cesium.Cesium3DTileStyle({
+        color : "(regExp('3').test(String(${name}))) ? color('cyan', 0.9) : color('purple', 0.1)"
+    });
+}
+
+// Show only buildings greater than 200 meters in height.
+function hideByHeight() {
+    tileset.style = new Cesium.Cesium3DTileStyle({
+        show : '${height} > 200'
+    });
+}
+
+Sandcastle.addToolbarMenu([{
+    text : 'Color By Height',
+    onselect : function() {
+        colorByHeight();
+    }
+}, {
+    text : 'Color By Latitude',
+    onselect : function() {
+        colorByLatitude();
+    }
+}, {
+    text : 'Color By Distance',
+    onselect : function() {
+        colorByDistance();
+    }
+}, {
+    text : 'Color By Name Regex',
+    onselect : function() {
+        colorByNameRegex();
+    }
+}, {
+    text : 'Hide By Height',
+    onselect : function() {
+        hideByHeight();
+    }
+}]);
+
+colorByHeight();
+
+
+
+
+</script>
+</body>
+</html>

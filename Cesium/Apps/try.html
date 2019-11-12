@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>城市选择的三种实现</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div style = "width:600px;"> 
+    <label for="addr-show02">您选择的是：
+        <input type="text" id="addr-show02">
+    </label>
+    <div id="addr-choice">
+        <ul id="title-wrap">
+            <li value="0">省份</li>
+            <li value="1">城市</li>
+            <li value="2">县区</li>
+        </ul>
+        <div id="show-panel">
+            <ul id="addr-wrap">
+            </ul>
+        </div>
+    </div>
+    <button type="button" class="btn met2">确定</button>    
+</div>
+
+
+<script src="city.js"></script>
+<!-- <script src="city02.js"></script> -->
+
+<script src="method01.js"></script>
+<script src="method02.js"></script>
+<!-- <script src="method03.js"></script> -->
+</body>
+</html>
