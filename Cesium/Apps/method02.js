@@ -113,32 +113,238 @@ btn2.onclick = function () {
       document.getElementById("ShowData").style.display = "";
     else
       document.getElementById("ShowData").style.display = "none"; 
-    
-    console.log(current2)
-
-    $.ajax({
+    // viewer.camera.flyTo();
+    jQuery.ajax({
         url:'http://www.cheosgrid.org.cn:8999/dis/dataQuery',
         type:"POST",
-        data:JSON.stringify({pageNum:1,showNum:10,}),
+        data:JSON.stringify({pageNum:1,showNum:20,}),
         contentType:"application/json; charset=utf-8",
         dataType:"json",
         success: function(data,status){
-                    alert("数据: \n" + data + "\n状态: " + status);
-                  },
-      })
-    
-    // var httpRequest = new XMLHttpRequest();
-    // var url = 'http://www.cheosgrid.org.cn:8999/dis/dataQuery';
-    // httpRequest.open('POST', 'url', true);//打开链接
-    // //设置请求头
-    // httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    // httpRequest.send('name=teswe&ee=ef');//发送请求头
-    // httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
-    //     if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
-    //         var json = httpRequest.responseText;//获取到服务端返回的数据
-    //         console.log(json);
-    //     }
-    // }
+            // console.log("数据: \n" + data + "\n状态: " + status);
+            // console.log(data.businessDataObject.metaDataList[0].browseImage);
+            // console.log(data);
+            // 使用读取到的data数据，创建一个新的Json用于进行table的渲染
+            // var data = {
+            //     id : "GF6_WFV_1119943349_LEVEL1A",
+            //     browseImage : "https://fastdfs.cheosgrid.org.cn/group1/M00/F3/56/wKgUD13Nll2AWZh-AAsaATj-X6U874.jpg",
+            //     centerTime : "2019-11-14 23:00:42",
+            //     dataSource : "GF",
+            //     cloudPrecent : "19.0",
+            //     lon : "-67.198095",
+            //     lat : "-26.671943"
+            // }
+            // // var content = JSON.stringify(data);
+            // // var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+            // // saveAs(blob, "data.json");
+            // var fs = require('fs');
+            // fs.readFile("TestData.json");
+            // var person = data.toString();
+            //
+
+            layui.use('table', function(){
+                var table = layui.table;
+                //return;
+                //渲染
+                window.ins1 = table.render({
+                    elem: '#test'
+                    ,height: 400
+                    ,width: 600
+                    ,title: '用户数据表'
+                    ,url: "Data.json"
+                    //,size: 'lg'
+                    ,page: {
+                    }
+
+                    ,autoSort: false
+                    //,loading: false
+                    ,totalRow: true
+                    ,limit: 30
+                    ,toolbar: '#toolbarDemo'
+                    ,defaultToolbar: ['filter', 'exports', 'print', {
+                        title: '帮助'
+                        ,layEvent: 'LAYTABLE_TIPS'
+                        ,icon: 'layui-icon-tips'
+                    }]
+                    ,cols: [[
+                        {type: 'checkbox', fixed: 'left'}
+                        ,{field:'id', title:'ID', width:100, sort: true, totalRow: true}
+                        ,{field:'browseImage', title:'Image', width:100, sort: true, totalRow: true}
+                        ,{field:'centerTime', title:'时间', width:100, sort: true, totalRow: true}
+                        ,{field:'dataSource', title:'卫星', width:100, sort: true, totalRow: true}
+                        ,{field:'cloudPrecent', title:'云量', width:100, sort: true, totalRow: true}
+                        ,{field:'lon', title:'lon', width:100, sort: true, totalRow: true}
+                        ,{field:'lat', title:'lat', width:100, sort: true, totalRow: true}
+
+                        // ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true, totalRowText: '合计：'}
+                        // ,{field:'browseImage', title:'Image', width:120, edit: 'text', templet: '#usernameTpl'}
+                        // ,{field:'email', title:'邮箱', hide: 0, width:150, edit: 'text', templet: function(d){
+                        //         return '<em>'+ d.email +'</em>'
+                        //     }}
+                        // ,{field:'sex', title:'性别', width:80, edit: 'text', sort: true}
+                        // ,{field:'city', title:'城市', width:120, templet: '#cityTpl1'}
+                        // ,{field:'sign', title:'签名'}
+                        // ,{field:'experience', title:'积分', width:80, sort: true, totalRow: true, templet: '<div>{{ d.experience }} 分</div>'}
+                        // ,{field:'ip', title:'IP', width:120}
+                        // ,{field:'logins', title:'登入次数', width:100, sort: true, totalRow: true}
+                        // ,{field:'joinTime', title:'加入时间', width:120}
+                        // ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ]]
+                });
+                //工具栏事件
+                table.on('toolbar(test)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch(obj.event){
+                        case 'add':
+                            layer.msg('添加');
+                            break;
+                        case 'update':
+                            layer.msg('编辑');
+                            break;
+                        case 'delete':
+                            layer.msg('删除');
+                            break;
+                        case 'getCheckData':
+                            var data = checkStatus.data;
+                            layer.alert(JSON.stringify(data));
+                            break;
+                        case 'getCheckLength':
+                            var data = checkStatus.data;
+                            layer.msg('选中了：'+ data.length + ' 个');
+                            break;
+                        case 'isAll':
+                            layer.msg(checkStatus.isAll ? '全选': '未全选')
+                            break;
+                        case 'LAYTABLE_TIPS':
+                            layer.alert('Table for layui-v'+ layui.v);
+                            break;
+                        case 'reload':
+                            table.reload('test', {
+                                page: {curr: 5}
+                                //,height: 300
+                                //,url: 'x'
+                            }, 'data');
+                            break;
+                    };
+                });
+
+                table.on('row(test)', function(obj){
+                    console.log(obj);
+                    //layer.closeAll('tips');
+                });
+
+                //监听表格行点击
+                table.on('tr', function(obj){
+                    console.log(obj)
+                });
+
+                //监听表格复选框选择
+                table.on('checkbox(test)', function(obj){
+                    console.log(obj)
+                });
+
+                //监听表格单选框选择
+                table.on('radio(test)', function(obj){
+                    console.log(obj)
+                });
+
+                //监听表格单选框选择
+                table.on('rowDouble(test)', function(obj){
+                    console.log(obj);
+                });
+
+                //监听单元格编辑
+                table.on('edit(test)', function(obj){
+                    var value = obj.value //得到修改后的值
+                        ,data = obj.data //得到所在行所有键值
+                        ,field = obj.field; //得到字段
+
+                    console.log(obj)
+                });
+
+                //监听行工具事件
+                table.on('tool(test)', function(obj){
+                    var data = obj.data;
+                    //console.log(obj)
+                    if(obj.event === 'del'){
+                        layer.confirm('真的删除行么', function(index){
+                            obj.del();
+                            layer.close(index);
+                        });
+                    } else if(obj.event === 'edit'){
+                        layer.prompt({
+                            formType: 2
+                            ,value: data.email
+                        }, function(value, index){
+                            obj.update({
+                                email: value
+                            });
+                            layer.close(index);
+                        });
+                    }
+                });
+
+                //监听排序
+                table.on('sort(test)', function(obj){
+                    console.log(this)
+
+                    //return;
+                    layer.msg('服务端排序。order by '+ obj.field + ' ' + obj.type);
+                    //服务端排序
+                    table.reload('test', {
+                        initSort: obj
+                        //,page: {curr: 1} //重新从第一页开始
+                        ,where: { //重新请求服务端
+                            key: obj.field //排序字段
+                            ,order: obj.type //排序方式
+                        }
+                    });
+                });
+
+                var $ = layui.jquery, active = {
+                    parseTable: function(){
+                        table.init('parse-table-demo', {
+                            limit: 3
+                        });
+                    }
+                    ,add: function(){
+                        table.addRow('test')
+                    }
+                };
+                $('i').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+                $('.layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        },
+    })
+
 };
 
 /*分别点击省市区标题的处理函数*/

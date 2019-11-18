@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 3000000,
+  "data": [
+    {
+      "id": "GF6_WFV_1119943349_LEVEL1A",
+      "browseImage": "https://fastdfs.cheosgrid.org.cn/group1/M00/F3/56/wKgUD13Nll2AWZh-AAsaATj-X6U874.jpg",
+      "centerTime": "2019-11-14 23:00:42",
+      "dataSource": "GF",
+      "cloudPrecent": "19.0",
+      "lon": "-67.198095",
+      "lat": "-26.671943"
+    }
+    
+  ]
+}  
